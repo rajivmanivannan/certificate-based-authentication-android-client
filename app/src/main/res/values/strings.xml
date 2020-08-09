@@ -1,0 +1,7 @@
+<resources>
+  <string name="app_name">CBA</string>
+  <string name="app_title">Certificate Based Authentication</string>
+  <string name="home_ok">OK</string>
+  <string name="home_action_choose">Choose</string>
+    <string name="home_select_your_client_certificate">Select your client certificate</string>
+</resources>

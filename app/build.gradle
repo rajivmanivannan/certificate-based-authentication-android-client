@@ -1,0 +1,113 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+  compileSdkVersion 30
+  buildToolsVersion "29.0.3"
+
+  defaultConfig {
+    applicationId "com.rm.cba"
+    minSdkVersion 24
+    targetSdkVersion 30
+    versionCode 1
+    versionName "1.0"
+
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+  }
+
+  File signFile = rootProject.file('keystore.properties')
+  if (signFile.exists()) {
+    Properties properties = new Properties()
+    properties.load(new FileInputStream(signFile))
+    signingConfigs {
+      debug {
+        storeFile file(properties['debugKeystorePath'])
+        storePassword properties['debugStorePassword']
+        keyAlias properties['debugKeyAlias']
+        keyPassword properties['debugKeyPassword']
+      }
+      release {
+        storeFile file(properties['releaseKeystorePath'])
+        storePassword properties['releaseStorePassword']
+        keyAlias properties['releaseKeyAlias']
+        keyPassword properties['releaseKeyPassword']
+      }
+    }
+  }
+
+  buildTypes {
+    debug {
+      debuggable true
+      minifyEnabled false
+      shrinkResources false
+      signingConfig signingConfigs.debug
+      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    }
+    release {
+      debuggable false
+      minifyEnabled false
+      shrinkResources false
+      signingConfig signingConfigs.release
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+  lintOptions {
+    // set to true to turn off analysis progress reporting by lint
+    quiet true
+    // if true, stop the gradle build if errors are found
+    abortOnError false
+    // if true, only report errors
+    ignoreWarnings false
+
+    disable 'MissingTranslation'
+  }
+  // Configure only for each module that uses Java 8
+  // language features (either in its source code or
+  // through dependencies).
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+  // For Kotlin projects
+  kotlinOptions {
+    jvmTarget = "1.8"
+  }
+}
+
+dependencies {
+  implementation fileTree(dir: "libs", include: ["*.jar"])
+  //Kotlin
+  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  implementation 'androidx.core:core-ktx:1.3.1'
+
+  //Androidx
+  implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+  implementation 'androidx.appcompat:appcompat:1.2.0'
+  implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
+  implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+  implementation 'androidx.cardview:cardview:1.0.0'
+  implementation 'androidx.viewpager2:viewpager2:1.0.0'
+
+  // Preference
+  implementation 'androidx.preference:preference-ktx:1.1.1'
+
+  //Material Design
+  implementation 'com.google.android.material:material:1.1.0'
+
+  //Retrofit - Networking library
+  implementation 'com.squareup.retrofit2:retrofit:2.8.1'
+  implementation 'com.squareup.okhttp3:logging-interceptor:4.5.0'
+  implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
+  implementation 'com.squareup.okhttp3:okhttp:4.8.0'
+
+  //OkHTTP-TLS - TLS HTTP Client Library
+  implementation 'com.squareup.okhttp3:okhttp-tls:4.8.0'
+
+  //Gson - Json Parser
+  implementation 'com.google.code.gson:gson:2.8.5'
+
+  testImplementation 'junit:junit:4.12'
+  androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+  androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+}
